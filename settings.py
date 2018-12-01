@@ -2,7 +2,7 @@ import os
 
 # We want to seamlessy run our API both locally and on Heroku. If running on
 # Heroku, sensible DB connection settings are stored in environment variables.
-MONGO_URI = os.environ.get('MONGODB_URI', 'mongodb://user:user@localhost:27017/evedemo')
+MONGO_URI = os.environ.get('MONGODB_URI', 'mongodb://user:user@localhost:27017/locs')
 
 # Enable reads (GET), inserts (POST) and DELETE for resources/collections
 # (if you omit this line, the API will default to ['GET'] and provide
@@ -21,36 +21,16 @@ CACHE_EXPIRES = 20
 schema = {
     # Schema definition, based on Cerberus grammar. Check the Cerberus project
     # (https://github.com/pyeve/cerberus) for details.
-    'ps': {
-        'type': 'integer'
-    },
-    "rules": {
-        'type': 'list'
-    },
-    "facets": {
-        'type': 'list'
-    },
-    "p": {
-        'type': 'integer'
-    },
-    "paging": {
-        'type': 'dict'
-    },
-    "components": {
-        'type': 'list'
-    },
-    "total": {
-        'type': 'integer'
-    },
-    "issues": {
-        'type': 'list'
-    },
-    "date": {
+    'project': {
         'type': 'string'
+    },
+    'loc': {
+        'type': 'list'
     }
+
 }
 
-issues_log = {
+project_loc = {
     'schema': schema,
 }
 
@@ -58,4 +38,4 @@ RENDERERS = [
     'eve.render.JSONRenderer'
 ]
 
-DOMAIN = {'issues_log': issues_log}
+DOMAIN = {'locs': project_loc}
