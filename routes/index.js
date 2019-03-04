@@ -28,14 +28,19 @@ module.exports = function(app) {
     app.put('/locs/:name', function(req, res) {
         Project.findOne({ name: req.params.name }, function(err, project) {
             if (err) {
-                let project = new Project();
-                project.name = req.params.name;
-                project.locs = [req.body.locs];
-                project.save(function(err2) {
-                    if (err2)
-                        return res.send(err2);
+                 return res.send(err);
 
-                    return res.json(project);
+            }
+
+            if(!project) {
+            	let p = new Project();
+                p.name = req.params.name;
+                p.locs = [req.body.locs];
+                p.save(function(err) {
+                    if (err)
+                        return res.send(err);
+
+                    return res.json(p);
                 });
             }
 
