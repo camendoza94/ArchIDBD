@@ -42,18 +42,18 @@ module.exports = function(app) {
 
                     return res.json(p);
                 });
-            }
+            } else {
+	            project.name = req.body.name || project.name;
+	            if(req.body.locs)
+	                project.locs.push(req.body.locs);
 
-            project.name = req.body.name || project.name;
-            if(req.body.locs)
-                project.locs.push(req.body.locs);
+	            project.save(function(err) {
+	                if (err)
+	                    return res.send(err);
 
-            project.save(function(err) {
-                if (err)
-                    return res.send(err);
-
-                res.json(project);
-            });
+	                res.json(project);
+	            });
+       		}
         });
     });
 }
