@@ -6,7 +6,7 @@ module.exports = function(app) {
     app.get('/locs', function(req, res) {
         Project.find(function(err, projects) {
             if (err)
-                res.send(err);
+                return res.send(err);
             res.json(projects);
         });
     });
@@ -27,11 +27,19 @@ module.exports = function(app) {
 
     app.put('/locs/:name', function(req, res) {
         Project.findOne({ name: req.params.name }, function(err, project) {
-            if (err)
-                res.send(err);
+            if (err) {
+                let project = new Project();
+                project.name = req.params.name;
+                project.locs = [req.body.locs];
+                project.save(function(err2) {
+                    if (err2)
+                        return res.send(err2);
+
+                    return res.json(project);
+                });
+            }
 
             project.name = req.body.name || project.name;
-            console.log(req.body.locs);
             if(req.body.locs)
                 project.locs.push(req.body.locs);
 
