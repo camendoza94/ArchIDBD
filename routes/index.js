@@ -1,5 +1,6 @@
 "use strict";
 const Project = require('../models/project');
+const IssueList = require('../models/issueList');
 
 module.exports = function(app) {
 
@@ -8,6 +9,26 @@ module.exports = function(app) {
             if (err)
                 return res.send(err);
             res.json(projects);
+        });
+    });
+
+    app.get('/issues', function(req, res) {
+        IssueList.find(function(err, issues) {
+            if (err)
+                return res.send(err);
+            res.json(issues);
+        });
+    });
+
+    app.post('/issues', function(req, res) {
+        IssueList.remove({}, (err)=> {
+            if(err)
+                return res.send(err);
+            IssueList.collection.insert(req.body, (err, issues) => {
+                if(err)
+                    return res.send(err);
+                res.json(issues);
+            });
         });
     });
 
