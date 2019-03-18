@@ -9,7 +9,7 @@ const routes = require('./routes/index');
 // Vars
 let app = express();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 
 // Obtained from http://stackoverflow.com/questions/18310394/no-access-control-allow-origin-node-apache-port-issue
 // Add headers
