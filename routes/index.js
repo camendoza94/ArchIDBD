@@ -1,6 +1,7 @@
 "use strict";
 const Project = require('../models/project');
 const IssueList = require('../models/issueList');
+const Key = require('../models/key');
 
 module.exports = function(app) {
 
@@ -19,6 +20,15 @@ module.exports = function(app) {
             res.json(issues);
         });
     });
+
+    app.get('/keys', function(req, res) {
+        Key.find(function(err, keys) {
+            if (err)
+                return res.send(err);
+            res.json(keys);
+        });
+    });
+
 
     app.post('/issues', function(req, res) {
         IssueList.remove({}, (err)=> {
@@ -43,6 +53,21 @@ module.exports = function(app) {
                 return res.send(err);
 
             res.json(project);
+        });
+    });
+
+
+    app.post('/keys', function(req, res) {
+        let key = new Key();
+
+        key.name = req.body.name;
+        key.key = req.body.key;
+
+        key.save(function(err) {
+            if (err)
+                return res.send(err);
+
+            res.json(key);
         });
     });
 
