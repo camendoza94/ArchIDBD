@@ -2,7 +2,6 @@
 "use strict";
 const bodyParser = require('body-parser');
 const express = require('express');
-var mongoose = require('mongoose');
 
 const routes = require('./routes/index');
 
@@ -35,6 +34,6 @@ app.use(function (req, res, next) {
 routes(app);
 
 
-var listener = app.listen(process.env.PORT || 8888, function() {
+const listener = app.listen(process.env.PORT || 8888, function() {
     console.log('App running on http://localhost:' + listener.address().port);
 });

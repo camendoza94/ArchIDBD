@@ -2,6 +2,7 @@
 const Project = require('../models/project');
 const IssueList = require('../models/issueList');
 const Key = require('../models/key');
+const CommitDate = require('../models/commitDate');
 
 module.exports = function(app) {
 
@@ -26,6 +27,14 @@ module.exports = function(app) {
             if (err)
                 return res.send(err);
             res.json(keys);
+        });
+    });
+
+    app.get('/dates', function(req, res) {
+        CommitDate.find(function(err, dates) {
+            if (err)
+                return res.send(err);
+            res.json(dates);
         });
     });
 
@@ -56,6 +65,20 @@ module.exports = function(app) {
         });
     });
 
+    app.post('/dates', function(req, res) {
+        let project = new CommitDate();
+
+        project.name = req.body.name;
+        project.dates = req.body.dates;
+
+        project.save(function(err) {
+            if (err)
+                return res.send(err);
+
+            res.json(project);
+        });
+    });
+
 
     app.post('/keys', function(req, res) {
         let key = new Key();
@@ -75,7 +98,6 @@ module.exports = function(app) {
         Project.findOne({ name: req.params.name }, function(err, project) {
             if (err) {
                  return res.send(err);
-
             }
 
             if(!project) {
@@ -102,4 +124,36 @@ module.exports = function(app) {
        		}
         });
     });
-}
+
+
+    app.put('/dates/:name', function(req, res) {
+        CommitDate.findOne({ name: req.params.name }, function(err, project) {
+            if (err) {
+                return res.send(err);
+            }
+
+            if(!project) {
+                let c = new CommitDate();
+                c.name = req.params.name;
+                c.dates = [req.body.dates];
+                c.save(function(err) {
+                    if (err)
+                        return res.send(err);
+
+                    return res.json(c);
+                });
+            } else {
+                project.name = req.body.name || project.name;
+                if(req.body.dates)
+                    project.dates.push(req.body.dates);
+
+                project.save(function(err) {
+                    if (err)
+                        return res.send(err);
+
+                    res.json(project);
+                });
+            }
+        });
+    });
+};
