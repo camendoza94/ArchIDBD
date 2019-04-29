@@ -3,6 +3,7 @@ const Project = require('../models/project');
 const IssueList = require('../models/issueList');
 const Key = require('../models/key');
 const CommitDate = require('../models/commitDate');
+const History = require('../models/history');
 
 module.exports = function(app) {
 
@@ -38,6 +39,14 @@ module.exports = function(app) {
         });
     });
 
+    app.get('/history', function(req, res) {
+        History.find(function(err, projects) {
+            if (err)
+                return res.send(err);
+            res.json(projects);
+        });
+    });
+
 
     app.post('/issues', function(req, res) {
         IssueList.remove({}, (err)=> {
@@ -64,6 +73,21 @@ module.exports = function(app) {
             res.json(project);
         });
     });
+
+    app.post('/history', function(req, res) {
+        let project = new History();
+
+        project.name = req.body.name;
+        project.data = req.body.data;
+
+        project.save(function(err) {
+            if (err)
+                return res.send(err);
+
+            res.json(project);
+        });
+    });
+
 
     app.post('/dates', function(req, res) {
         let project = new CommitDate();
@@ -146,6 +170,37 @@ module.exports = function(app) {
                 project.name = req.body.name || project.name;
                 if(req.body.dates)
                     project.dates.push(req.body.dates);
+
+                project.save(function(err) {
+                    if (err)
+                        return res.send(err);
+
+                    res.json(project);
+                });
+            }
+        });
+    });
+
+    app.put('/history/:name', function(req, res) {
+        History.findOne({ name: req.params.name }, function(err, project) {
+            if (err) {
+                return res.send(err);
+            }
+
+            if(!project) {
+                let p = new History();
+                p.name = req.params.name;
+                p.data = [req.body.data];
+                p.save(function(err) {
+                    if (err)
+                        return res.send(err);
+
+                    return res.json(p);
+                });
+            } else {
+                project.name = req.body.name || project.name;
+                if(req.body.data)
+                    project.data.push(req.body.data);
 
                 project.save(function(err) {
                     if (err)
