@@ -4,6 +4,7 @@ const IssueList = require('../models/issueList');
 const Key = require('../models/key');
 const CommitDate = require('../models/commitDate');
 const History = require('../models/history');
+const FileHistory = require('../models/fileHistory');
 
 module.exports = function(app) {
 
@@ -47,6 +48,14 @@ module.exports = function(app) {
         });
     });
 
+    app.get('/files', function(req, res) {
+        FileHistory.find(function(err, projects) {
+            if (err)
+                return res.send(err);
+            res.json(projects);
+        });
+    });
+
 
     app.post('/issues', function(req, res) {
         IssueList.remove({}, (err)=> {
@@ -76,6 +85,20 @@ module.exports = function(app) {
 
     app.post('/history', function(req, res) {
         let project = new History();
+
+        project.name = req.body.name;
+        project.data = req.body.data;
+
+        project.save(function(err) {
+            if (err)
+                return res.send(err);
+
+            res.json(project);
+        });
+    });
+
+    app.post('/files', function(req, res) {
+        let project = new FileHistory();
 
         project.name = req.body.name;
         project.data = req.body.data;
@@ -183,6 +206,37 @@ module.exports = function(app) {
 
     app.put('/history/:name', function(req, res) {
         History.findOne({ name: req.params.name }, function(err, project) {
+            if (err) {
+                return res.send(err);
+            }
+
+            if(!project) {
+                let p = new History();
+                p.name = req.params.name;
+                p.data = [req.body.data];
+                p.save(function(err) {
+                    if (err)
+                        return res.send(err);
+
+                    return res.json(p);
+                });
+            } else {
+                project.name = req.body.name || project.name;
+                if(req.body.data)
+                    project.data.push(req.body.data);
+
+                project.save(function(err) {
+                    if (err)
+                        return res.send(err);
+
+                    res.json(project);
+                });
+            }
+        });
+    });
+
+    app.put('/files/:name', function(req, res) {
+        FileHistory.findOne({ name: req.params.name }, function(err, project) {
             if (err) {
                 return res.send(err);
             }
