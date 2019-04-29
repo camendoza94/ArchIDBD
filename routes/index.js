@@ -242,7 +242,7 @@ module.exports = function(app) {
             }
 
             if(!project) {
-                let p = new History();
+                let p = new FileHistory();
                 p.name = req.params.name;
                 p.data = [req.body.data];
                 p.save(function(err) {
