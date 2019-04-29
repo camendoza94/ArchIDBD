@@ -7,6 +7,6 @@ const fileHistorySchema = new Schema({
     data: {type: [], required: true}
 }, { usePushEach: true });
 
-const FileHistory = mongoose.model('FileHistory', fileHistorySchema);
+const File = mongoose.model('File', fileHistorySchema);
 
-module.exports = FileHistory;
+module.exports = File;

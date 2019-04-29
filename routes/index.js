@@ -4,7 +4,7 @@ const IssueList = require('../models/issueList');
 const Key = require('../models/key');
 const CommitDate = require('../models/commitDate');
 const History = require('../models/history');
-const FileHistory = require('../models/fileHistory');
+const File = require('../models/fileHistory');
 
 module.exports = function(app) {
 
@@ -49,7 +49,7 @@ module.exports = function(app) {
     });
 
     app.get('/files', function(req, res) {
-        FileHistory.find(function(err, projects) {
+        File.find(function(err, projects) {
             if (err)
                 return res.send(err);
             res.json(projects);
@@ -98,7 +98,7 @@ module.exports = function(app) {
     });
 
     app.post('/files', function(req, res) {
-        let project = new FileHistory();
+        let project = new File();
 
         project.name = req.body.name;
         project.data = req.body.data;
@@ -236,13 +236,13 @@ module.exports = function(app) {
     });
 
     app.put('/files/:name', function(req, res) {
-        FileHistory.findOne({ name: req.params.name }, function(err, project) {
+        File.findOne({ name: req.params.name }, function(err, project) {
             if (err) {
                 return res.send(err);
             }
 
             if(!project) {
-                let p = new FileHistory();
+                let p = new File();
                 p.name = req.params.name;
                 p.data = [req.body.data];
                 p.save(function(err) {
