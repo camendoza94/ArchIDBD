@@ -281,7 +281,7 @@ module.exports = function(app) {
                 return res.send(err);
             }
             if(!project) {
-                let p = new File();
+                let p = new Architecture();
                 p.name = req.params.name;
                 p.children = req.body.children;
                 p.save(function(err) {
