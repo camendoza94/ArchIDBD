@@ -5,6 +5,7 @@ const Key = require('../models/key');
 const CommitDate = require('../models/commitDate');
 const History = require('../models/history');
 const File = require('../models/fileHistory');
+const Architecture = require('../models/architecture');
 
 module.exports = function(app) {
 
@@ -50,6 +51,14 @@ module.exports = function(app) {
 
     app.get('/files', function(req, res) {
         File.find(function(err, projects) {
+            if (err)
+                return res.send(err);
+            res.json(projects);
+        });
+    });
+
+    app.get('/architecture', function(req, res) {
+        Architecture.find(function(err, projects) {
             if (err)
                 return res.send(err);
             res.json(projects);
@@ -260,6 +269,34 @@ module.exports = function(app) {
                     if (err)
                         return res.send(err);
 
+                    res.json(project);
+                });
+            }
+        });
+    });
+
+    app.put('/architecture/:name', function(req, res) {
+        Architecture.findOne({ name: req.params.name }, function(err, project) {
+            if (err) {
+                return res.send(err);
+            }
+            if(!project) {
+                let p = new File();
+                p.name = req.params.name;
+                p.children = req.body.children;
+                p.save(function(err) {
+                    if (err)
+                        return res.send(err);
+
+                    return res.json(p);
+                });
+            } else {
+                project.name = req.body.name || project.name;
+                project.children = req.body.children || project.children;
+
+                project.save(function(err) {
+                    if (err)
+                        return res.send(err);
                     res.json(project);
                 });
             }
