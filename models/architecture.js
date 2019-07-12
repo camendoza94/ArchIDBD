@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const architectureSchema = new Schema({
     name: {type: String, required: true},
+    size: {type: Number, required: true},
     children: {type: [], required: true}
 });
 
