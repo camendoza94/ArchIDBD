@@ -284,7 +284,6 @@ module.exports = function(app) {
                 let p = new Architecture();
                 p.name = req.params.name;
                 p.children = req.body.children;
-                p.size = req.body.size;
                 p.save(function(err) {
                     if (err)
                         return res.send(err);
@@ -293,7 +292,6 @@ module.exports = function(app) {
                 });
             } else {
                 project.name = req.body.name || project.name;
-                project.size = req.body.size || project.size;
                 project.children = req.body.children || project.children;
 
                 project.save(function(err) {
