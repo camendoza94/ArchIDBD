@@ -262,8 +262,8 @@ module.exports = function(app) {
                 });
             } else {
                 project.name = req.body.name || project.name;
-                if(req.body.data)
-                    project.data.push(req.body.data);
+                project.data = req.body.data || project.data;
+
 
                 project.save(function(err) {
                     if (err)
