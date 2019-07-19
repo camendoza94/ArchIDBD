@@ -262,7 +262,7 @@ module.exports = function(app) {
                 });
             } else {
                 project.name = req.body.name || project.name;
-                project.data = req.body || project.data;
+                project.data = req.body.data || req.body || project.data;
                 project.save(function(err) {
                     if (err)
                         return res.send(err);
