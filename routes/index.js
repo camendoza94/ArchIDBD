@@ -230,7 +230,6 @@ module.exports = function(app) {
                     return res.json(p);
                 });
             } else {
-                console.log(req.body.data);
                 project.name = req.body.name || project.name;
                 if(req.body.data)
                     project.data.push(req.body.data);
@@ -262,6 +261,7 @@ module.exports = function(app) {
                     return res.json(p);
                 });
             } else {
+                console.log(req.body.data);
                 project.name = req.body.name || project.name;
                 if(req.body.data)
                     project.data.push(req.body.data);
