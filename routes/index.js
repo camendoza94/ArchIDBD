@@ -261,10 +261,8 @@ module.exports = function(app) {
                     return res.json(p);
                 });
             } else {
-                console.log(req.body.data);
                 project.name = req.body.name || project.name;
-                if(req.body.data)
-                    project.data.push(req.body.data);
+                project.data = req.body || project.data;
                 project.save(function(err) {
                     if (err)
                         return res.send(err);
