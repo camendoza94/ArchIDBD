@@ -231,13 +231,11 @@ module.exports = function(app) {
                 });
             } else {
                 project.name = req.body.name || project.name;
-                if(req.body.data)
+                if(req.body.data && project.data.find(d => d.commitId === req.body.data.commitId))
                     project.data.push(req.body.data);
-
                 project.save(function(err) {
                     if (err)
                         return res.send(err);
-
                     res.json(project);
                 });
             }
