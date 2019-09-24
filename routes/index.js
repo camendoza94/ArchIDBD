@@ -246,38 +246,42 @@ module.exports = function (app) {
     });
 
     app.put('/files/:name', function (req, res) {
-        File.findOne({name: req.params.name}, function (err, project) {
-            if (err) {
-                return res.send(err);
-            }
+            File.findOne({name: req.params.name}, function (err, project) {
+                if (err) {
+                    return res.send(err);
+                }
 
-            if (!project) {
-                let p = new File();
-                p.name = req.params.name;
-                p.data = [req.body.data];
-                p.save(function (err) {
-                    if (err)
-                        return res.send(err);
+                if (!project) {
+                    let p = new File();
+                    p.name = req.params.name;
+                    p.data = [req.body.data];
+                    p.save(function (err) {
+                        if (err)
+                            return res.send(err);
 
-                    return res.json(p);
-                });
-            } else {
-                project.name = req.body.name || project.name;
-                let newData = req.body.data || req.body;
-                const oldDataIndex = project.data.findIndex(d => d.commitId === (newData.commitId));
-                if (oldDataIndex !== -1)
-                    project.data[oldDataIndex] = newData;
-                else
-                    project.data.push(newData);
-                project.save(function (err) {
-                    if (err)
-                        return res.send(err);
+                        return res.json(p);
+                    });
+                } else {
+                    project.name = req.body.name || project.name;
+                    let newData = req.body.data || req.body;
+                    const oldDataIndex = project.data.findIndex(d => d.commitId === newData.commitId);
+                    if (oldDataIndex !== -1) {
+                        project.data.set(oldDataIndex, newData);
+                    } else {
+                        project.data.push(newData);
+                    }
+                    project.markModified("AddedSocial");
+                    project.save(function (err) {
+                        if (err)
+                            return res.send(err);
 
-                    res.json(project);
-                });
-            }
-        });
-    });
+                        res.json(project);
+                    });
+                }
+            });
+        }
+    )
+    ;
 
     app.put('/architecture/:name', function (req, res) {
         Architecture.findOne({name: req.params.name}, function (err, project) {
@@ -306,4 +310,5 @@ module.exports = function (app) {
             }
         });
     });
-};
+}
+;
