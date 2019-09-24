@@ -263,11 +263,12 @@ module.exports = function (app) {
                 });
             } else {
                 project.name = req.body.name || project.name;
-                const oldDataIndex = project.data.findIndex(d => d.commitId === req.body.data.commitId);
-                if (req.body.data && oldDataIndex !== -1)
-                    project.data[oldDataIndex] = req.body.data;
-                if (req.body.data && oldDataIndex === -1)
-                    project.data.push(req.body.data);
+                let newData = req.body.data || req.body;
+                const oldDataIndex = project.data.findIndex(d => d.commitId === (newData.commitId));
+                if (oldDataIndex !== -1)
+                    project.data[oldDataIndex] = newData;
+                else
+                    project.data.push(newData);
                 project.save(function (err) {
                     if (err)
                         return res.send(err);
