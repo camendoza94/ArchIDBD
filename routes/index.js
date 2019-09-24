@@ -232,9 +232,9 @@ module.exports = function (app) {
             } else {
                 project.name = req.body.name || project.name;
                 const oldDataIndex = project.data.findIndex(d => d.commitId === req.body.data.commitId);
-                if (req.body.data && oldData)
+                if (req.body.data && oldDataIndex !== -1)
                     project.data[oldDataIndex] = req.body.data;
-                if (req.body.data && !oldData)
+                if (req.body.data && oldDataIndex === -1)
                     project.data.push(req.body.data);
                 project.save(function (err) {
                     if (err)
@@ -264,9 +264,9 @@ module.exports = function (app) {
             } else {
                 project.name = req.body.name || project.name;
                 const oldDataIndex = project.data.findIndex(d => d.commitId === req.body.data.commitId);
-                if (req.body.data && oldData)
+                if (req.body.data && oldDataIndex !== -1)
                     project.data[oldDataIndex] = req.body.data;
-                if (req.body.data && !oldData)
+                if (req.body.data && oldDataIndex === -1)
                     project.data.push(req.body.data);
                 project.save(function (err) {
                     if (err)
