@@ -6,6 +6,7 @@ const CommitDate = require('../models/commitDate');
 const History = require('../models/history');
 const File = require('../models/fileHistory');
 const Architecture = require('../models/architecture');
+const Categorization = require('../models/categorization');
 
 module.exports = function (app) {
 
@@ -65,6 +66,13 @@ module.exports = function (app) {
         });
     });
 
+    app.get('/categorization', function (req, res) {
+        Categorization.find(function (err, projects) {
+            if (err)
+                return res.send(err);
+            res.json(projects);
+        });
+    });
 
     app.post('/issues', function (req, res) {
         IssueList.remove({}, (err) => {
