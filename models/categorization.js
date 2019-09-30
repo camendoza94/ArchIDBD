@@ -9,4 +9,4 @@ const categorizationSchema = new Schema({
 
 const Categorization = mongoose.model('Categorization', categorizationSchema);
 
-module.exports = IssueList;
+module.exports = Categorization;
