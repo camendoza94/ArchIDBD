@@ -327,7 +327,7 @@ module.exports = function (app) {
             if (!project) {
                 let p = new Categorization();
                 p.name = req.params.name;
-                p.decisions = req.body.decisions;
+                p.decisions = req.body.decisions || req.body;
                 p.save(function (err) {
                     if (err)
                         return res.send(err);
@@ -336,7 +336,7 @@ module.exports = function (app) {
                 });
             } else {
                 project.name = req.body.name || project.name;
-                project.decisions = req.body.decisions || project.decisions;
+                project.decisions = req.body.decisions || req.body || project.decisions;
 
                 project.save(function (err) {
                     if (err)
