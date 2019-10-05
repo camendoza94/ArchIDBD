@@ -318,5 +318,33 @@ module.exports = function (app) {
             }
         });
     });
+
+    app.put('/categorization/:name', function (req, res) {
+        Categorization.findOne({name: req.params.name}, function (err, project) {
+            if (err) {
+                return res.send(err);
+            }
+            if (!project) {
+                let p = new Categorization();
+                p.name = req.params.name;
+                p.decisions = req.body.decisions;
+                p.save(function (err) {
+                    if (err)
+                        return res.send(err);
+
+                    return res.json(p);
+                });
+            } else {
+                project.name = req.body.name || project.name;
+                project.decisions = req.body.decisions || project.decisions;
+
+                project.save(function (err) {
+                    if (err)
+                        return res.send(err);
+                    res.json(project);
+                });
+            }
+        });
+    });
 }
 ;
