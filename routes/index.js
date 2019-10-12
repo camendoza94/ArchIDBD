@@ -288,7 +288,7 @@ module.exports = function (app) {
                     });
                 }
                 req.body.data.files.map(file => {
-                    file.issuesDetail.forEach(d => {
+                    file.issuesDetail && file.issuesDet.forEach(d => {
                         let i = new Issue();
                         i._id = d.id;
                         i.rule = d.rule;
@@ -359,5 +359,4 @@ module.exports = function (app) {
             }
         });
     });
-}
-;
+};
