@@ -275,9 +275,9 @@ module.exports = function (app) {
                     newData = req.body.data;
                     p.save(function (err) {
                         if (err)
-                            return res.send(err);
+                             res.send(err);
 
-                        return res.json(p);
+                        res.json(p);
                     });
                 } else {
                     project.name = req.body.name || project.name;
@@ -295,7 +295,7 @@ module.exports = function (app) {
                         res.json(project);
                     });
                 }
-                req.body.data.files.map(file => {
+                newData.files.map(file => {
                     file.issuesDetail && file.issuesDetail.forEach(d => {
                         let i = new Issue();
                         i._id = d.id;
