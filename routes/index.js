@@ -300,11 +300,11 @@ module.exports = function (app) {
                         i.description = d.description;
                         i.save(function (err) {
                             if (err)
-                                res.send(err);
+                                return res.send(err);
                         });
                     })
                 });
-                return res.json(newData);
+                 res.json(newData);
             });
         }
     )
