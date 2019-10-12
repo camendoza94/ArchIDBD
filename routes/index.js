@@ -295,7 +295,7 @@ module.exports = function (app) {
                 newData.files.map(file => {
                     file.issuesDetail && file.issuesDetail.forEach(d => {
                         let i = new Issue();
-                        i._id = d.id;
+                        i.id = d.id;
                         i.rule = d.rule;
                         i.description = d.description;
                         i.save(function (err) {
