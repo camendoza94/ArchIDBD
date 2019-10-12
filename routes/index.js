@@ -294,17 +294,24 @@ module.exports = function (app) {
                 }
                 newData.files.map(file => {
                     file.issuesDetail && file.issuesDetail.forEach(d => {
-                        let i = new Issue();
-                        i.id = d.id;
-                        i.rule = d.rule;
-                        i.description = d.description;
-                        i.save(function (err) {
-                            if (err)
+                        Issue.findOne({id: d.id}, function (err, issue) {
+                            if (err) {
                                 return res.send(err);
+                            }
+                            if (!issue) {
+                                let i = new Issue();
+                                i.id = d.id;
+                                i.rule = d.rule;
+                                i.description = d.description;
+                                i.save(function (err) {
+                                    if (err)
+                                        return res.send(err);
+                                });
+                            }
                         });
                     })
                 });
-                 res.json(newData);
+                res.json(newData);
             });
         }
     )
