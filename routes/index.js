@@ -75,6 +75,14 @@ module.exports = function (app) {
         });
     });
 
+    app.get('/issuesDetail', function (req, res) {
+        Issue.find(function (err, issues) {
+            if (err)
+                return res.send(err);
+            res.json(issues);
+        });
+    });
+
     app.post('/issues', function (req, res) {
         IssueList.remove({}, (err) => {
             if (err)
@@ -288,7 +296,7 @@ module.exports = function (app) {
                     });
                 }
                 req.body.data.files.map(file => {
-                    file.issuesDetail && file.issuesDet.forEach(d => {
+                    file.issuesDetail && file.issuesDetail.forEach(d => {
                         let i = new Issue();
                         i._id = d.id;
                         i.rule = d.rule;
