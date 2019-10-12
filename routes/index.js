@@ -7,6 +7,7 @@ const History = require('../models/history');
 const File = require('../models/fileHistory');
 const Architecture = require('../models/architecture');
 const Categorization = require('../models/categorization');
+const Issue = require('../models/issue');
 
 module.exports = function (app) {
 
@@ -258,11 +259,12 @@ module.exports = function (app) {
                 if (err) {
                     return res.send(err);
                 }
-
+                let newData;
                 if (!project) {
                     let p = new File();
                     p.name = req.params.name;
                     p.data = [req.body.data];
+                    newData = req.body.data;
                     p.save(function (err) {
                         if (err)
                             return res.send(err);
@@ -271,7 +273,7 @@ module.exports = function (app) {
                     });
                 } else {
                     project.name = req.body.name || project.name;
-                    let newData = req.body.data || req.body;
+                    newData = req.body.data || req.body;
                     const oldDataIndex = project.data.findIndex(d => d.commitId === newData.commitId);
                     if (oldDataIndex !== -1) {
                         project.data.set(oldDataIndex, newData);
@@ -281,11 +283,22 @@ module.exports = function (app) {
                     project.markModified("AddedSocial");
                     project.save(function (err) {
                         if (err)
-                            return res.send(err);
-
+                            res.send(err);
                         res.json(project);
                     });
                 }
+                req.body.data.files.map(file => {
+                    file.issuesDetail.forEach(d => {
+                        let i = new Issue();
+                        i._id = d.id;
+                        i.rule = d.rule;
+                        i.description = d.description;
+                        i.save(function (err) {
+                            if (err)
+                                res.send(err);
+                        });
+                    })
+                });
             });
         }
     )
