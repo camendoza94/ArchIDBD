@@ -275,9 +275,7 @@ module.exports = function (app) {
                     newData = req.body.data;
                     p.save(function (err) {
                         if (err)
-                             res.send(err);
-
-                        res.json(p);
+                            return res.send(err);
                     });
                 } else {
                     project.name = req.body.name || project.name;
@@ -291,8 +289,7 @@ module.exports = function (app) {
                     project.markModified("AddedSocial");
                     project.save(function (err) {
                         if (err)
-                            res.send(err);
-                        res.json(project);
+                            return res.send(err);
                     });
                 }
                 newData.files.map(file => {
@@ -307,6 +304,7 @@ module.exports = function (app) {
                         });
                     })
                 });
+                return res.json(newData);
             });
         }
     )
