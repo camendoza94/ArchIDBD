@@ -325,6 +325,7 @@ module.exports = function (app) {
             if (!project) {
                 let p = new Architecture();
                 p.name = req.params.name;
+                p.repo = req.body.repo;
                 p.children = req.body.children;
                 p.save(function (err) {
                     if (err)
@@ -334,6 +335,7 @@ module.exports = function (app) {
                 });
             } else {
                 project.name = req.body.name || project.name;
+                project.repo = req.body.repo || project.repo;
                 project.children = req.body.children || project.children;
 
                 project.save(function (err) {

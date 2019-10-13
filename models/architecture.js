@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 
 const architectureSchema = new Schema({
     name: {type: String, required: true},
-    children: {type: [], required: true}
+    children: {type: [], required: true},
+    repo: {type: String, required: true}
 });
 
 const Architecture = mongoose.model('Architecture', architectureSchema);
