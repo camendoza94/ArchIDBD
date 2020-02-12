@@ -292,7 +292,7 @@ module.exports = function (app) {
                             return res.send(err);
                     });
                 }
-                addIssuesDetail.then(() => res.json(newData)).catch(() => res.send(err))
+                addIssuesDetail(newData).then(() => res.json(newData)).catch(() => res.send(err))
             });
         }
     );
