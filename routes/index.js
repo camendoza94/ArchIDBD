@@ -292,30 +292,36 @@ module.exports = function (app) {
                             return res.send(err);
                     });
                 }
-                newData.files.map(file => {
-                    file.issuesDetail && file.issuesDetail.forEach(d => {
-                        Issue.findOne({id: d.id}, function (err, issue) {
-                            if (err) {
-                                return res.send(err);
-                            }
-                            if (!issue) {
-                                let i = new Issue();
-                                i.id = d.id;
-                                i.rule = d.rule;
-                                i.description = d.description;
-                                i.save(function (err) {
-                                    if (err)
-                                        return res.send(err);
-                                });
-                            }
-                        });
-                    })
-                });
-                res.json(newData);
+                addIssuesDetail.then(() => res.json(newData)).catch(() => res.send(err))
             });
         }
-    )
-    ;
+    );
+
+    function addIssuesDetail(newData) {
+        return new Promise(function (fulfill, reject) {
+            newData.files.map(file => {
+                file.issuesDetail && file.issuesDetail.forEach(d => {
+                    Issue.findOne({id: d.id}, function (err, issue) {
+                        if (err) {
+                            reject(err);
+                            return;
+                        }
+                        if (!issue) {
+                            let i = new Issue();
+                            i.id = d.id;
+                            i.rule = d.rule;
+                            i.description = d.description;
+                            i.save(function (err) {
+                                if (err)
+                                    reject(err);
+                            });
+                        }
+                    });
+                })
+            });
+            fulfill(newData);
+        });
+    }
 
     app.put('/architecture/:name', function (req, res) {
         Architecture.findOne({name: req.params.name}, function (err, project) {
